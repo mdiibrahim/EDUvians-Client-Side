@@ -1,20 +1,138 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useContext } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { Toaster } from 'react-hot-toast';
+import 'firebase/auth';
+import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
+import LoginScreen from './src/login/LoginScreen';
+import SignUpScreen from './src/signup/SignUpScreen';
+import AuthProvider, { AuthContext } from './src/AuthProvider/AuthProvider';
+import Dashboard from './src/Dashboard/Dashboard';
+import SemesterFeeCalculator from './src/Fee/SemesterFeeCalculator';
+import CGPACalculator from './src/CGPA/CGPACalculator';
+import StudentAnalytics from './src/StudentAnalytics/StudentAnalytics';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-export default function App() {
+const queryClient = new QueryClient()
+
+
+const Stack = createStackNavigator();
+
+
+const App = () => {
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <QueryClientProvider client={queryClient}>
+
+      <AuthProvider>
+        <Toaster />
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName={"Login"}>
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={({ navigation }) => ({
+                title: 'EDUvians',
+                headerRight: () => <ToggleButtons navigation={navigation} />,
+              })}
+            />
+            <Stack.Screen
+              name="SignUp"
+              component={SignUpScreen}
+              options={{
+                title: 'Sign Up',
+              }}
+            />
+            <Stack.Screen
+              name="Dashboard"
+              component={Dashboard}
+              options={({ navigation }) => ({
+                title: 'Dashboard',
+                headerRight: () => <ToggleButtons navigation={navigation} />,
+              })}
+            />
+            <Stack.Screen
+              name="Semester"
+              component={SemesterFeeCalculator}
+              options={({ navigation }) => ({
+                title: 'SemesterFee',
+                headerRight: () => <ToggleButtons navigation={navigation} />,
+              })}
+            />
+            <Stack.Screen
+              name="CGPA"
+              component={CGPACalculator}
+              options={({ navigation }) => ({
+                title: 'CGPA',
+                headerRight: () => <ToggleButtons navigation={navigation} />,
+              })}
+            />
+            <Stack.Screen
+              name="Analytics"
+              component={StudentAnalytics}
+              options={({ navigation }) => ({
+                title: 'Analytics',
+                headerRight: () => <ToggleButtons navigation={navigation} />,
+              })}
+            />
+            {/* Add other screens here */}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </AuthProvider>
+    </QueryClientProvider>
   );
-}
+};
+
+const ToggleButtons = ({ navigation }) => {
+  const {
+    user,
+    logOut
+  } = useContext(AuthContext);
+
+  if (user) {
+    return (
+      <TouchableOpacity style={styles.button} onPress={logOut}>
+
+        <Text style={styles.buttonText}>Log Out</Text>
+      </TouchableOpacity>
+    );
+  } else {
+    return (
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('Login')}
+        >
+          <Text style={styles.buttonText}>Log In</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('SignUp')}
+        >
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+};
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+  },
+  button: {
+    marginRight: 10,
+    backgroundColor: '#DAA520',
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: '#800000',
+    fontSize: 16,
   },
 });
+
+export default App;
