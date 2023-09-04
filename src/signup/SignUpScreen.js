@@ -13,7 +13,12 @@ const SignUpScreen = () => {
     const {
         signUp, signInWithGoogle, signInWithGitHub, setUser, user, saveUserInDB
     } = useContext(AuthContext);
-
+    if (user) {
+        navigation.navigate('Dashboard');
+    }
+    if (!user) {
+        navigation.navigate('Login');
+    }
     const handleSignUp = (event) => {
 
         event.preventDefault();
@@ -38,9 +43,9 @@ const SignUpScreen = () => {
         signInWithGoogle()
             .then(result => {
                 const user = result.user;
-                toast.success('Successfully Your registration done.')
-                saveUserInDB(user.displayName, user.email, 'buyer');
                 navigation.navigate('Dashboard');
+                saveUserInDB(user.displayName, user.email, 'buyer');
+
 
             })
             .catch(error => {
@@ -53,7 +58,7 @@ const SignUpScreen = () => {
         signInWithGitHub()
             .then(result => {
                 const user = result.user;
-                toast.success('Successfully Your registration done.')
+                navigation.navigate('Dashboard');
                 saveUserInDB(user.displayName, user.email, 'buyer');
                 navigation.navigate('Dashboard');
             })
@@ -68,6 +73,7 @@ const SignUpScreen = () => {
             .then(() => {
                 // Handle successful logout
                 setUser(null); // Clear the user in the context
+                navigation.navigate('Login');
                 Alert.alert('Success', 'Logged out successfully');
             })
             .catch(error => {

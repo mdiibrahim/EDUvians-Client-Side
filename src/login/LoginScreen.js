@@ -10,6 +10,12 @@ const LoginScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { logIn, signInWithGoogle, signInWithGitHub, setUser, user, setLoading, logOut } = useContext(AuthContext);
+    if (user) {
+        navigation.navigate('Dashboard');
+    }
+    if (!user) {
+        navigation.navigate('Login');
+    }
 
     const handleLogin = (event) => {
         event.preventDefault();
@@ -28,6 +34,35 @@ const LoginScreen = () => {
             })
             .finally(() => setLoading(false));
     };
+    const handleLogInWithGoogle = () => {
+
+        signInWithGoogle()
+            .then(result => {
+                const user = result.user;
+                navigation.navigate('Dashboard');
+                saveUserInDB(user.displayName, user.email);
+
+
+            })
+            .catch(error => {
+                Alert.alert('Error', error.message);
+            });
+
+    }
+    const handleLogInWithGithub = () => {
+
+        signInWithGitHub()
+            .then(result => {
+                const user = result.user;
+                navigation.navigate('Dashboard');
+                saveUserInDB(user.displayName, user.email);
+
+            })
+            .catch(error => {
+                Alert.alert('Error', error.message);
+            });
+
+    }
 
     const handleLogout = () => {
         logOut()
@@ -73,10 +108,10 @@ const LoginScreen = () => {
                 >
                     <Text style={styles.buttonText}>New to EDUvians? Sign Up</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.googleButton} onPress={signInWithGoogle}>
+                <TouchableOpacity style={styles.googleButton} onPress={handleLogInWithGoogle}>
                     <Text style={styles.buttonText}>Sign In with Google</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={signInWithGitHub}>
+                <TouchableOpacity style={styles.button} onPress={handleLogInWithGithub}>
                     <Text style={styles.buttonText}>Login with GitHub</Text>
                 </TouchableOpacity>
             </>

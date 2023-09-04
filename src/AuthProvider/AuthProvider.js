@@ -4,6 +4,7 @@ import { app } from '../firebase/firebaseConfig';
 
 
 
+
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
 
@@ -13,6 +14,7 @@ const auth = getAuth(app)
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+
 
     const signUp = (email, password) => {
         setLoading(true);
@@ -24,26 +26,22 @@ const AuthProvider = ({ children }) => {
         return signInWithEmailAndPassword(auth, email, password);
     }
 
-    const signInWithGoogle = () => {
+    const signInWithGoogle = async () => {
         try {
             setLoading(true);
-            const result = signInWithPopup(auth, googleProvider);
+            const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
-            navigation.navigate('Dashboard');
-            saveUserInDB(user?.displayName, user?.email);
             setUser(user);
         } catch (error) {
             console.error('Google Sign-In Error:', error);
         }
 
     }
-    const signInWithGitHub = () => {
+    const signInWithGitHub = async () => {
         try {
             setLoading(true);
-            const result = signInWithPopup(auth, githubProvider);
+            const result = await signInWithPopup(auth, githubProvider);
             const user = result.user;
-
-            saveUserInDB(user?.displayName, user?.email);
             setUser(user);
         } catch (error) {
             console.error('Github Sign-In Error:', error);
@@ -71,9 +69,11 @@ const AuthProvider = ({ children }) => {
     }
 
 
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             if (currentUser === null) {
+
                 setUser(currentUser);
             }
             setLoading(false);

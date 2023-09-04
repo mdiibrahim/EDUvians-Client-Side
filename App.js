@@ -88,13 +88,37 @@ const ToggleButtons = ({ navigation }) => {
     user,
     logOut
   } = useContext(AuthContext);
+  const handleLogout = () => {
+
+    logOut()
+      .then(() => {
+        // Handle successful logout
+        setUser(null); // Clear the user in the context
+        navigation.navigate('Login');
+        Alert.alert('Success', 'Logged out successfully');
+      })
+      .catch(error => {
+        // Handle logout errors
+        Alert.alert('Error', error.message);
+      });
+  };
+  const dash = () => {
+    navigation.navigate('Dashboard');
+  }
 
   if (user) {
     return (
-      <TouchableOpacity style={styles.button} onPress={logOut}>
+      <View style={styles.buttonContainer}>
 
-        <Text style={styles.buttonText}>Log Out</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleLogout}>
+
+          <Text style={styles.buttonText}>Log Out</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={dash}>
+
+          <Text style={styles.buttonText}>Dashboard</Text>
+        </TouchableOpacity>
+      </View>
     );
   } else {
     return (

@@ -48,7 +48,7 @@ const StudentAnalytics = () => {
     // Mutation function for adding CGPA data
     const addCGPAMutation = useMutation(
         async (newCGPA) => {
-            const res = await fetch(`http://localhost:5000/cgpa/:${user?.email}`, {
+            const res = await fetch(`http://localhost:5000/cgpa`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
