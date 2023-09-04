@@ -6,12 +6,12 @@ import { getFirestore } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyDd6o-oSweUfn_klJ8_u972MKNtGu9dxWY",
-    authDomain: "eduvians-edu.firebaseapp.com",
-    projectId: "eduvians-edu",
-    storageBucket: "eduvians-edu.appspot.com",
-    messagingSenderId: "513309360072",
-    appId: "1:513309360072:web:23f4dfc14865e6d36a8afd"
+    apiKey: process.env.REACT_APP_apiKey,
+    authDomain: process.env.REACT_APP_authDomain,
+    projectId: process.env.REACT_APP_projectId,
+    storageBucket: process.env.REACT_APP_storageBucket,
+    messagingSenderId: process.env.REACT_APP_messagingSenderId,
+    appId: process.env.REACT_APP_appId
 };
 
 // Initialize Firebase
